@@ -1,0 +1,25 @@
+services:
+
+  cat-clinic-simulation:
+    build: .
+    image: cat-clinic-simulation
+    container_name: cat-clinic-simulation
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/cat-clinic-db
+
+
+  db:
+    image: postgres:13.7-alpine
+    container_name: db
+    ports:
+      - "6432:5432"
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_DB=cat-clinic-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
