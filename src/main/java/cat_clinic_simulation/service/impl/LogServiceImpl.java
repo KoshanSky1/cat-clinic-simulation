@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class LogServiceImpl implements LogService {
-private final MessageLogRepository repository;
+    private final MessageLogRepository repository;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -21,6 +21,6 @@ private final MessageLogRepository repository;
         MessageLog messageLog = new MessageLog();
         messageLog.setMessage(message);
         repository.save(messageLog);
-        log.info("Added a new logMessage: " + message);
+        log.info("Added a new logMessage: '{}'", message);
     }
 }

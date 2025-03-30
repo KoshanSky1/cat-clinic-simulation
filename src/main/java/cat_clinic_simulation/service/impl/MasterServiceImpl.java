@@ -1,10 +1,10 @@
 package cat_clinic_simulation.service.impl;
 
+import cat_clinic_simulation.exception.NumberAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import cat_clinic_simulation.dto.master.UpdateMasterDto;
 import cat_clinic_simulation.exception.EntityNotFoundException;
-import cat_clinic_simulation.exception.NameAlreadyExistsException;
 import cat_clinic_simulation.mapper.MasterMapper;
 import cat_clinic_simulation.model.Master;
 import cat_clinic_simulation.repository.MasterRepository;
@@ -32,7 +32,7 @@ public class MasterServiceImpl implements MasterService {
         checkIfTheNumberIsAvailable(master.getNumber());
         master.setAmount(0.0);
         Master masterSaved = masterRepository.save(master);
-        log.info("Added new master with id=" + masterSaved.getId());
+        log.info("Added a new master with id '{}'", masterSaved.getId());
         return masterSaved;
     }
 
@@ -49,14 +49,14 @@ public class MasterServiceImpl implements MasterService {
             master.setDescription(oldDescription);
         }
         Master updatedMaster = masterRepository.save(master);
-        log.info("Updated master with id=" + masterId);
+        log.info("Updated master with id '{}'", masterId);
         return updatedMaster;
     }
 
     @Override
     public Master getMasterByMasterId(Long masterId) {
         Master master = getMasterById(masterId);
-        log.info("Master with id=" + masterId + " found");
+        log.info("Master with id '{}' found", masterId);
         return master;
     }
 
@@ -73,19 +73,18 @@ public class MasterServiceImpl implements MasterService {
     @Transactional
     public void deleteMasterById(Long masterId) {
         masterRepository.deleteById(masterId);
-        log.info("Master with id=" + masterId + "was deleted");
+        log.info("Master with id '{}' was deleted", masterId);
     }
 
     private Master getMasterById(Long masterId) {
         return masterRepository.findById(masterId).orElseThrow(()
-                -> new EntityNotFoundException("Master with id=" + masterId + " was not found"));
+                -> new EntityNotFoundException(String.format("Master with id '%s' was not found", masterId)));
     }
 
-    @Transactional
     private void checkIfTheNumberIsAvailable(Integer number) {
         if (masterRepository.existsByNumber(number)) {
-            logService.saveLogMessage("Trying to re-add master with number: " + number);
-            throw new NameAlreadyExistsException("This number " + number + " already exists");
+            logService.saveLogMessage(String.format("Trying to re-add master with '%s'", number));
+            throw new NumberAlreadyExistsException(String.format("This number '%s' already exists", number));
         }
     }
 

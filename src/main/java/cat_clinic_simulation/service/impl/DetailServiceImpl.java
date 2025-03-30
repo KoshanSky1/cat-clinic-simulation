@@ -38,7 +38,7 @@ public class DetailServiceImpl implements DetailService {
         Detail detailSaved = detailRepository.save(detail);
         Double newMasterAmount = recalculateMasterAmount(masterId, detail.getAmount(), "ADD");
         master.setAmount(newMasterAmount);
-        log.info("Added a new detail to the master with id=" + masterId);
+        log.info("Added a new detail to the master with id '{}'", masterId);
         return detailSaved;
     }
 
@@ -62,19 +62,19 @@ public class DetailServiceImpl implements DetailService {
             }
             master.setAmount(newMasterAmount);
         }
-        detailMapper.updateDetail(updateDetailDto, detail);;
+        detailMapper.updateDetail(updateDetailDto, detail);
         if (updateDetailDto.name().isBlank()) {
             detail.setName(oldName);
         }
         Detail updatedDetail = detailRepository.save(detail);
-        log.info("Updated detail with id=" + detailId);
+        log.info("Detail with id '{}' was updated", detailId);
         return updatedDetail;
     }
 
     @Override
     public Detail getDetailByDetailId(Long detailId) {
         Detail detail = getDetailById(detailId);
-        log.info("Detail with id=" + detailId + " found");
+        log.info("Detail with id '{}' found", detailId);
         return detail;
     }
 
@@ -82,7 +82,7 @@ public class DetailServiceImpl implements DetailService {
     public List<Detail> getAllDetailByMasterId(Long masterId) {
         Master master = masterService.getMasterByMasterId(masterId);
         final List<Detail> details = detailRepository.findAllByMaster(master);
-        log.info("A list of details for the master with id=" + masterId + " has been generated");
+        log.info("A list of details for the master with id '{}' has been generated", masterId);
         return details.stream()
                 .sorted(Comparator.comparing(Detail::getName))
                 .collect(Collectors.toList());
@@ -96,20 +96,20 @@ public class DetailServiceImpl implements DetailService {
         Double newMasterAmount = recalculateMasterAmount(master.getId(), detail.getAmount(), "DELETE");
         master.setAmount(newMasterAmount);
         detailRepository.deleteById(detailId);
-        log.info("Detail with id=" + detailId + "was deleted");
+        log.info("Detail with id '{}' was deleted", detailId);
     }
 
     private Detail getDetailById(Long detailId) {
         return detailRepository.findById(detailId).orElseThrow(()
-                -> new EntityNotFoundException("Detail with id=" + detailId + " was not found"));
+                -> new EntityNotFoundException(String.format("Detail with id '%s' was not found", detailId)));
     }
 
     private void checkIfTheNameIsAvailable(Master master, String name) {
         if (detailRepository.existsByMasterAndName(master, name)) {
-            logService.saveLogMessage("Trying to re-add а detail with name=" + name + " to thr master with id: "
-                    + master.getId());
-            throw new NameAlreadyExistsException("This name " + name + " already exists in the master with id="
-                    + master.getId());
+            logService.saveLogMessage(String.format("Trying to re-add а detail with name '%s' to the master" +
+                    "with id '%s'", name, master.getId()));
+            throw new NameAlreadyExistsException(String.format("This name '%s' already exists in the master" +
+                    "with id '%s'", name, master.getId()));
         }
     }
 
