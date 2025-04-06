@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/cat-clinic-db
+    username: postgres
+    password: root
+  sql:
+    init:
+      mode: always
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: none
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: true
+      open-in-view: false
+  logging:
+    level:
+      org:
+        springframework:
+          orm:
+            jpa: INFO
+          transaction: INFO
+          transaction.interceptor: TRACE
