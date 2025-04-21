@@ -16,10 +16,11 @@ public class Detail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "master_id")
     private Master master;
     @Column(name = "detail_name")
     private String name;
+    @Column(name = "detail_amount")
     private Double amount;
 }

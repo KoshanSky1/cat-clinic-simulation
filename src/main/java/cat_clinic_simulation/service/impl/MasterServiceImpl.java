@@ -17,9 +17,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class MasterServiceImpl implements MasterService {
 
     private final MasterRepository masterRepository;

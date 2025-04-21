@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/masters")
+@RequiredArgsConstructor
+@Slf4j
 public class MasterController {
 
     private final MasterService service;

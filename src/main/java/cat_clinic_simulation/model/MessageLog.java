@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "message_logs")
+@Table(name = "logs")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -19,7 +19,9 @@ public class MessageLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdDateTime;
+    @Column(name = "log_message")
     private String message;
 }
